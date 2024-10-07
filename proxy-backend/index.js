@@ -1,8 +1,9 @@
 /**  Подключение зависимостей  */
-const sequelize = require('./connection.js');
+const { sequelizeProxy, sequelizeAct } = require('./connection.js');
 const express = require('express');
 const cors = require('cors');
-const router = require('./routers/router')
+const {proxyRouter} = require('./routers/proxy-router.js');
+const {actRouter} = require('./routers/act-router.js');
 
 const PORT = 8081;
 /**  Экземпляр приложения  */
@@ -11,16 +12,26 @@ const app = express();
 /**  Подключение middlewares  */
 app.use(express.json());
 app.use(cors());
-app.use('/api', router)
+app.use('/api/proxy', proxyRouter)
+app.use('/api/act', actRouter)
+
 
 //**  Проверка подключения к БД  **//
 const assertDatabaseConnectionOk = async () => {
-    console.log(`Checking database connection...`);
+    console.log(`Checking database connections...`);
     try {
-        await sequelize.authenticate();
-        console.log('Database connection OK!');
+        await sequelizeProxy.authenticate();
+        console.log('Proxy database connection OK!');
     } catch (error) {
-        console.log('Unable to connect to the database:');
+        console.log('Unable to connect to the proxy database:');
+        console.log(error.message);
+    }
+
+    try {
+        await sequelizeAct.authenticate();
+        console.log('Act database connection OK!');
+    } catch (error) {
+        console.log('Unable to connect to the act database:');
         console.log(error.message);
     }
 }

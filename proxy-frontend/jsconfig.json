@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@services/*": ["api/services/*"],
+      "@dialogs/*": ["components/dialogs/*"],
+      "@views/*": ["views/*"]
+    }
+  },
+  "include": ["src"]
+}
